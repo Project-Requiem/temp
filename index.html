@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NumSolve AI — Universal Solver</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="bg-ambient">
+    <div class="bg-orbe o1"></div>
+    <div class="bg-orbe o2"></div>
+    <div class="bg-orbe o3"></div>
+  </div>
+  <div class="bg-grid"></div>
+  <div class="float-symbols" id="floatSymbols"></div>
+  <div class="data-stream left" id="dataStreamL"></div>
+  <div class="data-stream right" id="dataStreamR"></div>
+
+  <nav class="navbar">
+    <div class="nav-inner">
+      <div class="nav-brand">
+        <div class="brand-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="8" fill="url(#bG)"/>
+            <text x="16" y="23" text-anchor="middle" fill="white" font-size="20" font-weight="800" font-family="Inter">S</text>
+            <defs><linearGradient id="bG" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#6366f1"/><stop offset="1" stop-color="#a855f7"/></linearGradient></defs>
+          </svg>
+        </div>
+        <span class="brand-text">NumSolve<span class="brand-accent">AI</span></span>
+      </div>
+      <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <span class="icon-sun"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></span>
+          <span class="icon-moon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="subject-selector">
+    <div class="selector-inner">
+      <p class="selector-label">Choose subject</p>
+      <div class="subject-cards">
+        <button class="subject-card active" data-subject="mathematics">
+          <div class="subj-icon">∑</div>
+          <div class="subj-info">
+            <span class="subj-name">Mathematics</span>
+            <span class="subj-desc">Algebra · Calculus · Geometry · Trig · Stats</span>
+          </div>
+          <div class="subj-check"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        </button>
+        <button class="subject-card" data-subject="physics">
+          <div class="subj-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></div>
+          <div class="subj-info">
+            <span class="subj-name">Physics</span>
+            <span class="subj-desc">Mechanics · Kinematics · Forces · Energy · Waves</span>
+          </div>
+          <div class="subj-check"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        </button>
+        <button class="subject-card" data-subject="chemistry">
+          <div class="subj-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v4l-2 4v10h8V10l-2-4V2M6 12h12"/></svg></div>
+          <div class="subj-info">
+            <span class="subj-name">Chemistry</span>
+            <span class="subj-desc">Stoichiometry · Reactions · Moles · Acids · Gases</span>
+          </div>
+          <div class="subj-check"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <main class="app-container">
+    <div class="app-layout">
+      <section class="panel panel-input">
+        <div class="panel-header">
+          <h2 id="panelTitle"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> <span id="panelTitleText">Mathematics</span></h2>
+          <span class="panel-badge" id="subjectBadge">📐 Math</span>
+        </div>
+        <div class="panel-body">
+          <div class="input-group">
+            <textarea class="input-textarea" id="problemInput" rows="4" placeholder="Paste or type your problem here..."></textarea>
+          </div>
+          <div class="divider"><span>or upload</span></div>
+          <div class="input-group">
+            <div class="upload-zone" id="uploadZone">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <p class="upload-text"><span class="upload-link">Browse</span> or drop images/PDFs</p>
+              <input type="file" id="fileInput" accept="image/*,application/pdf" hidden multiple>
+            </div>
+            <div class="file-list" id="fileList"></div>
+          </div>
+          <div class="input-group">
+            <label class="input-label" id="sampleLabel">Try an example</label>
+            <div class="sample-pills" id="samplePills"></div>
+          </div>
+          <button class="btn-solve" id="solveBtn">
+            <span class="btn-text">Solve</span>
+            <span class="btn-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+          </button>
+        </div>
+      </section>
+
+      <section class="panel panel-output">
+        <div class="panel-header">
+          <h2><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> Solution</h2>
+          <div class="output-actions" id="outputActions" style="display:none">
+            <button class="btn-icon-only" id="exportBtn" title="Download as PDF">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="panel-body output-body" id="outputBody">
+          <div class="output-empty" id="outputEmpty">
+            <div class="empty-graphic">
+              <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+                <circle cx="40" cy="40" r="38" stroke="currentColor" stroke-width="1.5" stroke-dasharray="8 8" opacity="0.2"/>
+                <path d="M30 45l6 6 14-16" stroke="url(#eG)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                <defs><linearGradient id="eG" x1="30" y1="35" x2="50" y2="55"><stop stop-color="#6366f1"/><stop offset="1" stop-color="#a855f7"/></linearGradient></defs>
+              </svg>
+            </div>
+            <h3>Ready</h3>
+            <p>Type a problem or choose an example to get started</p>
+          </div>
+          <div class="output-loading" id="outputLoading" style="display:none">
+            <div class="spinner"></div>
+            <p class="loading-text">Solving...</p>
+            <div class="loading-steps">
+              <div class="loading-step active">Reading</div>
+              <div class="loading-step">Analyzing</div>
+              <div class="loading-step">Computing</div>
+              <div class="loading-step">Formatting</div>
+            </div>
+          </div>
+          <div class="subject-warning" id="subjectWarning" style="display:none">
+            <div class="warning-content">
+              <span class="warning-icon">🔄</span>
+              <div>
+                <strong>Wrong subject detected!</strong>
+                <p id="warningMessage">Switching...</p>
+              </div>
+            </div>
+          </div>
+          <div class="solution-content" id="solutionContent" style="display:none">
+            <div class="solution-section final-answer-section" id="finalAnswerSection">
+              <div class="section-label">Final Answer</div>
+              <div class="final-answer-box" id="finalAnswerBox"></div>
+            </div>
+            <div class="solution-section">
+              <div class="section-label">Step-by-Step Explanation</div>
+              <div class="steps-container" id="stepsContainer"></div>
+            </div>
+            <div class="solution-section alternate-section">
+              <div class="section-header-row">
+                <div class="section-label">Alternate Solution</div>
+                <button class="btn-alt-toggle" id="altToggle">
+                  <span id="altToggleText">Show</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+              </div>
+              <div class="alt-content" id="altContent" style="display:none">
+                <div class="steps-container" id="altStepsContainer"></div>
+              </div>
+            </div>
+            <div class="solution-section">
+              <div class="section-label">Practice — Similar Questions</div>
+              <div class="similar-questions" id="similarQuestions"></div>
+            </div>
+            <div class="solution-section mistakes-section">
+              <div class="section-label">Common Mistakes to Avoid</div>
+              <ul class="mistakes-list" id="mistakesList"></ul>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>NumSolveAI &copy; 2026</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
